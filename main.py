@@ -25,7 +25,7 @@ async def scrap(query: str):
     service = Service(executable_path=r'/usr/bin/chromedriver')
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
-    #options.set_capability("pageLoadStrategy", "eager")
+    options.set_capability("pageLoadStrategy", "eager")
 
     query = urllib.parse.quote(query)  # URL에 삽입할 수 있도록 쿼리를 인코딩합니다.
 
