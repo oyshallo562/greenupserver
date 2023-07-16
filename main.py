@@ -61,4 +61,5 @@ async def scrap(query: str):
 
     driver.quit()
 
-    return JSONResponse(content=json.dumps(results), status_code=200)
+    return JSONResponse(content=json.dumps(results, ensure_ascii=False), status_code=200)
+
