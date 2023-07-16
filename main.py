@@ -5,12 +5,19 @@ from selenium.webdriver import ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from pyvirtualdisplay import Display
 from bs4 import BeautifulSoup
 import time
 import json
 import urllib.parse
 
 app = FastAPI()
+
+display = Display(visible=0, size=(1920, 1080))
+display.start()
+
+path='/usr/bin/chromedriver'
+driver = webdriver.Chrome(path)
 
 @app.get("/scrap")
 async def scrap(query: str):
