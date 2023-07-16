@@ -21,14 +21,14 @@ path='/usr/bin/chromedriver'
 
 @app.get("/scrap")
 async def scrap(query: str):
-    options = ChromeOptions()
-    options.add_argument('headless')
+    #options = ChromeOptions()
+    #options.add_argument('headless')
 
     query = urllib.parse.quote(query)  # URL에 삽입할 수 있도록 쿼리를 인코딩합니다.
 
     url = f'https://search.danawa.com/dsearch.php?query={query}&originalQuery={query}&checkedInfo=N&volumeType=vmvs&page=1&limit=40'
 
-    driver = webdriver.Chrome(path, options=options)
+    driver = webdriver.Chrome(path)
     driver.get(url)
     time.sleep(2)
 
