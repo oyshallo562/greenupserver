@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from pyvirtualdisplay import Display
 from bs4 import BeautifulSoup
 import time
@@ -20,13 +21,14 @@ path='/usr/bin/chromedriver'
 async def scrap(query: str):
     #options = ChromeOptions()
     #options.add_argument('headless')
-    chrome_options = Options()
+    service = Service(executable_path=r'/usr/bin/chromedriver')
+    options = webdriver.ChromeOptions()
 
     query = urllib.parse.quote(query)  # URL에 삽입할 수 있도록 쿼리를 인코딩합니다.
 
     url = f'https://search.danawa.com/dsearch.php?query={query}&originalQuery={query}&checkedInfo=N&volumeType=vmvs&page=1&limit=40'
 
-    driver = webdriver.Chrome(path, options=chrome_options)
+    driver = webdriver.Chrome(service=service, options=options)
     driver.get(url)
     time.sleep(2)
 
