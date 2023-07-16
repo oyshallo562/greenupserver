@@ -52,6 +52,8 @@ async def scrap(query: str):
         if img_link is None:
             img_link = img_element.get('src')
         img_link = img_link.replace("130:130", "300:300")
+        #img_link 앞에 https: 붙이기
+        img_link = "https:" + img_link
 
         results.append({
             "name": name,
