@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
@@ -61,5 +60,4 @@ async def scrap(query: str):
 
     driver.quit()
 
-    return JSONResponse(content=json.dumps(results, ensure_ascii=False), status_code=200)
-
+    return results
