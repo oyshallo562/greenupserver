@@ -11,6 +11,7 @@ import time
 import json
 import urllib.parse
 
+
 app = FastAPI()
 
 display = Display(visible=0, size=(1920, 1080))
