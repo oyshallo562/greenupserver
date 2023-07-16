@@ -17,7 +17,6 @@ display = Display(visible=0, size=(1920, 1080))
 display.start()
 
 path='/usr/bin/chromedriver'
-driver = webdriver.Chrome(path)
 
 @app.get("/scrap")
 async def scrap(query: str):
@@ -28,7 +27,7 @@ async def scrap(query: str):
 
     url = f'https://search.danawa.com/dsearch.php?query={query}&originalQuery={query}&checkedInfo=N&volumeType=vmvs&page=1&limit=40'
 
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(executable_path=path, options=options)  # webdriver 객체 생성
     driver.get(url)
     time.sleep(2)
 
