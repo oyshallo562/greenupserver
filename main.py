@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from pyvirtualdisplay import Display
@@ -23,12 +24,16 @@ async def scrap(query: str):
     #options.add_argument('headless')
     service = Service(executable_path=r'/usr/bin/chromedriver')
     options = webdriver.ChromeOptions()
+    options.add_argument("--headless")
+    capabilities = DesiredCapabilities.CHROME
+    capabilities["pageLoadStrategy"] = "eager"  # 가능한 값은 "normal", "eager", "none" 입니다.
 
     query = urllib.parse.quote(query)  # URL에 삽입할 수 있도록 쿼리를 인코딩합니다.
 
     url = f'https://search.danawa.com/dsearch.php?query={query}&originalQuery={query}&checkedInfo=N&volumeType=vmvs&page=1&limit=40'
 
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = webdriver.Chrome(service=service, options=options, desired_capabilities=capabilities)
+    driver.set_page_load_timeout(60)
     driver.get(url)
     time.sleep(2)
 
