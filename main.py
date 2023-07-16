@@ -1,39 +1,33 @@
-import time
-from selenium.webdriver import Chrome
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+from selenium import webdriver
 from selenium.webdriver import ChromeOptions
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from bs4 import BeautifulSoup
+import time
+import json
+import urllib.parse
 
-# 브라우저 띄우지 않고 하기
-options = ChromeOptions()
-options.add_argument('headless')
+app = FastAPI()
 
-url = 'https://search.danawa.com/dsearch.php?query=%EC%82%BC%EB%8B%A4%EC%88%98&originalQuery=%EC%82%BC%EB%8B%A4%EC%88%98&checkedInfo=N&volumeType=vmvs&page=1&limit=40'
+@app.get("/scrap")
+async def scrap(query: str):
+    options = ChromeOptions()
+    options.add_argument('headless')
 
-driver = Chrome()
-driver.get(url)
+    query = urllib.parse.quote(query)  # URL에 삽입할 수 있도록 쿼리를 인코딩합니다.
 
-# 없는것을 만들어야할때.
-#more_btn = WebDriverWait(driver, 5).until(
-#            EC.presence_of_element_located([By.CSS_SELECTOR, 'dl#dlMaker_simple button.btn_spec_view.btn_view_more'])
-#            ).click()
+    url = f'https://search.danawa.com/dsearch.php?query={query}&originalQuery={query}&checkedInfo=N&volumeType=vmvs&page=1&limit=40'
 
-# 제조사 체크박스 클릭
-# 있는것을 찾을때 -> 대기가 필요하다면 time.sleep이용
-# driver.find_element_by_css_selector('dl#dlMaker_simple > dd > ul:nth-of-type(2) > li:nth-child(12)').click()
-# element는 하나만 찾고, elements는 여러개 찾음-> a[0]이런식으로 찾아야함
+    driver = webdriver.Chrome(options=options)
+    driver.get(url)
+    time.sleep(2)
 
-# 검색결과가 렌더링 될때까지 잠시 대기
-time.sleep(2)
+    results = []
 
-# 5page
-for page in range(1,2):
-
-    soup = BeautifulSoup(driver.page_source, features="html.parser")
+    soup = BeautifulSoup(driver.page_source, "html.parser")
     product_li_tags = soup.select('li.prod_item')
 
     for li in product_li_tags:
@@ -48,4 +42,12 @@ for page in range(1,2):
         if img_link is None:
             img_link = img_element.get('src')
         img_link = img_link.replace("130:130", "300:300")
-        print(name, img_link)
+
+        results.append({
+            "name": name,
+            "img_link": img_link
+        })
+
+    driver.quit()
+
+    return JSONResponse(content=json.dumps(results), status_code=200)
