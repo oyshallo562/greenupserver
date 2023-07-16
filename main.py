@@ -28,7 +28,7 @@ async def scrap(query: str):
 
     url = f'https://search.danawa.com/dsearch.php?query={query}&originalQuery={query}&checkedInfo=N&volumeType=vmvs&page=1&limit=40'
 
-    driver = webdriver.Chrome(executable_path=path, options=options)  # webdriver 객체 생성
+    driver = webdriver.Chrome(path, options=options)
     driver.get(url)
     time.sleep(2)
 
